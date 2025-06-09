@@ -1,0 +1,11 @@
+[package]
+name = "poem-demo"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+console-subscriber = "0.4.1" # local tui tracing
+poem = {version="3.1.10", features=["opentelemetry"]} # the http server
+poem-openapi = {version="5.1.14", features=["swagger-ui"]} # exporters for openapi
+tokio = {version="1.45.1", features=["full"]} # the async framework
+tracing-subscriber = "0.3.19" # for stdout logging
