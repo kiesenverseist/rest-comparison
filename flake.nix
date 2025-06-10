@@ -44,7 +44,7 @@
               '';
             };
 
-            opensearch.enable = true;
+            opensearch.enable = false;
           };
 
           packages = [

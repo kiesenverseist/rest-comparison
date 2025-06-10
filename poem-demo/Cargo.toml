@@ -17,3 +17,4 @@ tokio = {version="1.45.1", features=["full"]} # the async framework
 # tracing
 tracing-subscriber = "0.3.19" # for stdout logging
 console-subscriber = "0.4.1" # local tui tracing
+color-eyre = "0.6.5"

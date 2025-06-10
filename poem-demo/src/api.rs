@@ -1,6 +1,19 @@
 use std::time::SystemTime;
 
-use poem_openapi::{OpenApi, param::Query, payload::PlainText};
+use poem::{error::InternalServerError, web::Data, Result};
+use poem_openapi::{
+    Object, OpenApi,
+    param::Query,
+    payload::{Json, PlainText},
+};
+use sqlx::PgPool;
+
+#[derive(Object)]
+struct Todo {
+    id: i32,
+    title: String,
+    done: bool,
+}
 
 pub struct Api;
 
@@ -25,5 +38,22 @@ impl Api {
     #[oai(path = "/time", method = "get")]
     async fn time(&self) -> PlainText<String> {
         PlainText(format!("{:#?}", SystemTime::now()))
+    }
+
+    /// Create a new todo
+    #[oai(path = "/todo", method = "post")]
+    async fn create_todo(
+        &self,
+        pool: Data<&PgPool>,
+        description: PlainText<String>,
+    ) -> Result<Json<i32>> {
+
+        let id = sqlx::query!("insert into todos (title) values ($1) returning id", description.0)
+            .fetch_one(pool.0)
+            .await
+            .map_err(InternalServerError)?
+            .id;
+
+        Ok(Json(id))
     }
 }
