@@ -4,8 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-console-subscriber = "0.4.1" # local tui tracing
+# rest
 poem = {version="3.1.10", features=["opentelemetry"]} # the http server
-poem-openapi = {version="5.1.14", features=["swagger-ui"]} # exporters for openapi
+poem-openapi = {version="5.1.14", features=["swagger-ui", "sqlx"]} # exporters for openapi
+
+# database
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "tls-rustls"] }
+
+# async runtime
 tokio = {version="1.45.1", features=["full"]} # the async framework
+
+# tracing
 tracing-subscriber = "0.3.19" # for stdout logging
+console-subscriber = "0.4.1" # local tui tracing

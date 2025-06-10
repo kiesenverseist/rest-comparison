@@ -15,7 +15,7 @@
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [inputs.devenv.flakeModule];
       systems = inputs.nixpkgs.lib.systems.flakeExposed;
-      perSystem = {pkgs, ...}: {
+      perSystem = {config, pkgs, ...}: {
         devenv.shells.default = {
           devenv.root = let
               root = builtins.readFile inputs.devenv-root.outPath;
@@ -38,10 +38,21 @@
           services = {
             postgres = {
               enable = true;
+              listen_addresses = "127.0.0.1";
+              initialScript = ''
+                CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'postgres';
+              '';
             };
 
             opensearch.enable = true;
           };
+
+          packages = [
+            # rust
+            pkgs.bacon
+            pkgs.sqlx-cli
+            pkgs.tokio-console
+          ];
         };
       };
     };
